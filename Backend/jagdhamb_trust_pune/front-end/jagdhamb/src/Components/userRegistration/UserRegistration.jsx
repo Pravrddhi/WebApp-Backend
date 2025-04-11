@@ -22,17 +22,20 @@ class UserRegistration extends Component {
   }
 
   componentDidMount() {
+    // IMPORTANT: If you're using verifyOtp callbacks, you can skip the config ones to avoid duplicate logs
     window.configuration = {
       widgetId: '35646b737343323738353130',
       tokenAuth: '446603TCnuMImrwXIQ67f96874P1',
       exposeMethods: true,
       success: (data) => {
-        console.log('OTP verified successfully', data);
+        // This callback will still trigger unless handled in verifyOtp manually
+        console.log('Global config success (can skip if using verifyOtp callback):', data);
       },
       failure: (error) => {
-        console.log('OTP verification failed', error);
+        console.log('Global config failure (can skip if using verifyOtp callback):', error);
       },
     };
+
     if (window.initSendOTP) {
       window.initSendOTP(window.configuration);
     } else {
@@ -52,70 +55,99 @@ class UserRegistration extends Component {
   };
 
   handleMultiSelectChange = (e) => {
-    const options = Array.from(e.target.selectedOptions, option => option.value);
+    const options = Array.from(e.target.selectedOptions, (option) => option.value);
     this.setState({ instrument: options });
   };
 
-  handleVerifyClick = () => {
-    const { mobileNo } = this.state;
-    if (!mobileNo || mobileNo.trim().length < 10) {
-      alert('Please enter a valid mobile number.');
-      return;
-    }
-
-    if (typeof window.sendOtp !== 'function') {
-      alert('OTP methods not loaded yet. Please try again.');
+  sendOtp = (identifier) => {
+    if (!identifier) {
+      alert('Please enter a valid identifier.');
       return;
     }
 
     window.sendOtp(
-      `91${mobileNo}`,
+      identifier,
       (data) => {
-        console.log('OTP sent successfully.', data);
+        console.log('OTP sent successfully:', data);
         this.setState({ showOtpModal: true, reqId: data.reqId });
       },
       (error) => {
-        console.error('Error sending OTP', error);
-        alert('Failed to send OTP');
+        console.log('OTP send error:', error);
+        alert('Failed to send OTP.');
       }
     );
   };
 
+  handleVerifyClick = () => {
+    const { mobileNo } = this.state;
+    if (!mobileNo || mobileNo.length < 10) {
+      alert('Enter a valid mobile number.');
+      return;
+    }
+
+    if (typeof window.sendOtp !== 'function') {
+      alert('OTP methods not loaded yet.');
+      return;
+    }
+
+    // Optionally check captcha status (returns true/false)
+    const captchaVerified = window.isCaptchaVerified?.();
+    console.log('Captcha is verified or not:', captchaVerified);
+
+    // Optional: Get widget data
+    const widgetData = window.getWidgetData?.();
+    console.log('Widget Data:', widgetData);
+
+    this.sendOtp(`91${mobileNo}`);
+  };
+
   handleOtpSubmit = () => {
+    const { otp, reqId } = this.state;
+
+    if (!otp) {
+      alert('Enter OTP first.');
+      return;
+    }
+
     if (typeof window.verifyOtp !== 'function') {
-      alert('OTP methods not loaded yet. Please try again.');
+      alert('OTP verification method not loaded.');
       return;
     }
 
     window.verifyOtp(
-      this.state.otp,
+      otp,
       (data) => {
-        console.log('OTP verified: ', data);
+        console.log('OTP verified:', data);
         this.setState({ isMobileVerified: true, showOtpModal: false });
+        alert('Mobile number verified!');
       },
       (error) => {
-        console.error('OTP verification failed', error);
-        alert('Incorrect OTP');
+        console.log('Verification error:', error);
+        alert('Incorrect OTP.');
       },
-      this.state.reqId
+      reqId
     );
   };
 
   handleRetryOtp = () => {
+    const { reqId } = this.state;
+
     if (typeof window.retryOtp !== 'function') {
-      alert('OTP methods not loaded yet. Please try again.');
+      alert('Retry OTP method not loaded.');
       return;
     }
 
     window.retryOtp(
       '11',
       (data) => {
-        console.log('Resend data: ', data);
+        console.log('Resent OTP:', data);
+        alert('OTP resent successfully.');
       },
       (error) => {
-        console.error('Resend error: ', error);
+        console.log('Retry error:', error);
+        alert('Failed to resend OTP.');
       },
-      this.state.reqId
+      reqId
     );
   };
 
@@ -136,7 +168,7 @@ class UserRegistration extends Component {
     if (!mobileNo.trim()) errors.mobileNo = 'Mobile number is required';
     if (!age.trim()) errors.age = 'Age is required';
     if (!gender.trim()) errors.gender = 'Gender is required';
-    if (instrument.length === 0) errors.instrument = 'At least one instrument is required';
+    if (instrument.length === 0) errors.instrument = 'At least one instrument must be selected';
     if (!address.trim()) errors.address = 'Address is required';
 
     this.setState({ errors });
@@ -144,7 +176,7 @@ class UserRegistration extends Component {
   };
 
   render() {
-    const { errors, isMobileVerified, showOtpModal } = this.state;
+    const { errors, isMobileVerified, showOtpModal, otp } = this.state;
 
     return (
       <div className="form-container">
@@ -192,7 +224,12 @@ class UserRegistration extends Component {
               <div className="error">{errors.mobileNo}</div>
             </div>
             <div className="form-group" style={{ alignSelf: 'end' }}>
-              <button type="button" className="verify-btn" onClick={this.handleVerifyClick}>
+              <button
+                type="button"
+                className="verify-btn"
+                onClick={this.handleVerifyClick}
+                disabled={isMobileVerified}
+              >
                 {isMobileVerified ? 'Verified' : 'Verify'}
               </button>
             </div>
@@ -223,7 +260,7 @@ class UserRegistration extends Component {
               <h3>Enter OTP</h3>
               <input
                 type="text"
-                value={this.state.otp}
+                value={otp}
                 onChange={(e) => this.setState({ otp: e.target.value })}
               />
               <div className="modal-actions-row">
