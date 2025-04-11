@@ -55,6 +55,9 @@ services:
       dockerfile: ./compose/local/react/Dockerfile
     image: frontend_jagdhamb_trust_pune_local
     container_name: frontend_jagdhamb_trust_pune_local
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+      - WATCHPACK_POLLING=true
     depends_on:
       - backend
     # env_file:

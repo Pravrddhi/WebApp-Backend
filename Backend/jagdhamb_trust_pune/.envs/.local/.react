@@ -1,0 +1,4 @@
+CHOKIDAR_USEPOLLING=true # create-ui-app <= 5.x
+WATCHPACK_POLLING=true # create-ui-app >= 5.x
+FAST_REFRESH=false
+WDS_SOCKET_PORT=30000
