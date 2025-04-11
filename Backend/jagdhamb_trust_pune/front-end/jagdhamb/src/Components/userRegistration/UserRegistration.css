@@ -1,0 +1,100 @@
+/* Base resets */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  html, body {
+    height: 100%;
+    font-family: sans-serif;
+    background-color: #f7f7f7;
+  }
+  
+  /* Give top space */
+  .form-container {
+    display: flex;
+    justify-content: center;
+    padding-top: 40px;
+  }
+  
+  /* Form box */
+  .registration-form {
+    background-color: #fff;
+    padding: 20px 24px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    width: 92%;
+    max-width: 520px;
+  }
+  
+  /* Heading */
+  .registration-form h2 {
+    text-align: center;
+    font-size: 18px;
+    margin-bottom: 14px;
+    font-weight: 600;
+  }
+  
+  /* Labels */
+  .registration-form label {
+    font-weight: 500;
+    font-size: 13px;
+    margin-bottom: 2px;
+    display: block;
+  }
+  
+  /* Inputs */
+  .registration-form input,
+  .registration-form select,
+  .registration-form textarea {
+    width: 100%;
+    padding: 6px 8px;
+    font-size: 13px;
+    margin-bottom: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  /* Group rows with multiple inputs */
+  .row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 8px;
+  }
+  
+  /* Each item in row gets equal space */
+  .row .form-group {
+    flex: 1;
+  }
+  
+  /* Single-line field */
+  .form-group {
+    margin-bottom: 8px;
+  }
+  
+  /* Error messages */
+  .error {
+    color: red;
+    font-size: 11px;
+    margin-top: -4px;
+    margin-bottom: 6px;
+  }
+  
+  /* Submit button */
+  .registration-form button {
+    width: 100%;
+    padding: 8px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    margin-top: 10px;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
+  }
+  
+  .registration-form button:hover {
+    background-color: #0056b3;
+  }
+  
