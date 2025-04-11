@@ -1,0 +1,10 @@
+# !/bin/bash
+
+set -o errexit
+set -o pipefail
+set -o nounset
+
+# npm install
+npm install -g serve
+npm run build
+serve -s build
