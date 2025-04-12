@@ -6,7 +6,7 @@ from django.utils.translation import gettext_lazy as _
 
 from .forms import UserAdminChangeForm
 from .forms import UserAdminCreationForm
-from .models import User
+from .models import User, UserRegister
 
 if settings.DJANGO_ADMIN_FORCE_ALLAUTH:
     # Force the `admin` sign in process to go through the `django-allauth` workflow:
@@ -48,3 +48,35 @@ class UserAdmin(auth_admin.UserAdmin):
             },
         ),
     )
+
+@admin.register(UserRegister)
+class UserRegisterAdmin(admin.ModelAdmin):
+    fieldsets = (
+        (None, {"fields": ("first_name", "last_name", "gender")}),
+        (_("Personal Info"), {
+            "fields": (
+                "date_of_birth",
+                "age",
+                "mobile_number",
+                "emergency_contact",
+                "blood_group",
+                "instrument",
+                "address"
+            )
+        }),
+        (_("Status Info"), {
+            "fields": (
+                "soft_delete",
+                "created_at",
+                "updated_at",
+                "updated_by",
+            )
+        }),
+    )
+
+    readonly_fields = ("created_at", "updated_at")
+    list_display = ["first_name", "last_name", "mobile_number", "gender", "blood_group", "soft_delete"]
+    search_fields = ["first_name", "last_name", "mobile_number", "instrument"]
+    list_filter = ["gender", "blood_group", "soft_delete"]
+    ordering = ["id"]
+
