@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import './UserRegistration.css';
+import OtpModal from './OtpModal';
 
 class UserRegistration extends Component {
   constructor(props) {
@@ -117,7 +118,7 @@ class UserRegistration extends Component {
     window.verifyOtp(
       otp,
       (data) => {
-        console.log('OTP verified:', data);
+        console.log('OTP verified:', data, this.state.otp);
         this.setState({ isMobileVerified: true, showOtpModal: false });
         alert('Mobile number verified!');
       },
@@ -177,7 +178,6 @@ class UserRegistration extends Component {
 
   render() {
     const { errors, isMobileVerified, showOtpModal, otp } = this.state;
-
     return (
       <div className="form-container">
         <form className="registration-form" onSubmit={this.handleSubmit}>
@@ -255,21 +255,29 @@ class UserRegistration extends Component {
         </form>
 
         {showOtpModal && (
-          <div className="otp-modal">
-            <div className="otp-box">
-              <h3>Enter OTP</h3>
-              <input
-                type="text"
-                value={otp}
-                onChange={(e) => this.setState({ otp: e.target.value })}
-              />
-              <div className="modal-actions-row">
-                <button onClick={this.handleOtpSubmit}>Submit</button>
-                <button onClick={() => this.setState({ showOtpModal: false })}>Cancel</button>
-                <button onClick={this.handleRetryOtp}>Resend OTP</button>
-              </div>
-            </div>
-          </div>
+
+          <OtpModal
+            otp={otp}
+            onChange={(e) => this.setState({ otp: e.target.value })}
+            onSubmit={this.handleOtpSubmit}
+            onCancel={() => this.setState({ showOtpModal: false })}
+            onRetry={this.handleRetryOtp}
+          />
+          // <div className="otp-modal">
+          //   <div className="otp-box">
+          //     <h3>Enter OTP</h3>
+          //     <input
+          //       type="text"
+          //       value={otp}
+          //       onChange={(e) => this.setState({ otp: e.target.value })}
+          //     />
+          //     <div className="modal-actions-row">
+          //       <button onClick={this.handleOtpSubmit}>Submit</button>
+          //       <button onClick={() => this.setState({ showOtpModal: false })}>Cancel</button>
+          //       <button onClick={this.handleRetryOtp}>Resend OTP</button>
+          //     </div>
+          //   </div>
+          // </div>
         )}
       </div>
     );
