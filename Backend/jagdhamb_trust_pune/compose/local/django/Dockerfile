@@ -6,6 +6,8 @@ FROM python AS python-build-stage
 
 ARG BUILD_ENVIRONMENT=local
 
+RUN pip install --upgrade pip
+
 # Install apt packages
 RUN apt-get update && apt-get install --no-install-recommends -y \
   # dependencies for building Python packages
