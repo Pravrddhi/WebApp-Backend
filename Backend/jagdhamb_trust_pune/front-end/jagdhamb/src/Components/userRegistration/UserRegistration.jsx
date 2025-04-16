@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { MultiSelect } from 'primereact/multiselect';
-import 'primereact/resources/themes/lara-light-indigo/theme.css'; // Import theme
-import 'primereact/resources/primereact.min.css'; // Import core styles
-import 'primeicons/primeicons.css'; // Import icons
+import 'primereact/resources/themes/lara-light-indigo/theme.css';
+import 'primereact/resources/primereact.min.css';
+import 'primeicons/primeicons.css';
 import './UserRegistration.css';
 import RegistrationImage from '../Assets/g.jfif';
 import OtpModal from './OtpModal';
@@ -24,21 +24,21 @@ class UserRegistration extends Component {
       showOtpModal: false,
       otp: '',
       reqId: '',
+      popupMessage: '',
+      showPopup: false,
     };
   }
 
   componentDidMount() {
-    // IMPORTANT: If you're using verifyOtp callbacks, you can skip the config ones to avoid duplicate logs
     window.configuration = {
       widgetId: '35646b737343323738353130',
       tokenAuth: '446603TCnuMImrwXIQ67f96874P1',
       exposeMethods: true,
       success: (data) => {
-        // This callback will still trigger unless handled in verifyOtp manually
-        console.log('Global config success (can skip if using verifyOtp callback):', data);
+        console.log('Global config success:', data);
       },
       failure: (error) => {
-        console.log('Global config failure (can skip if using verifyOtp callback):', error);
+        console.log('Global config failure:', error);
       },
     };
 
@@ -55,6 +55,14 @@ class UserRegistration extends Component {
     }
   }
 
+  showPopup = (message) => {
+    this.setState({ popupMessage: message, showPopup: true });
+  };
+
+  closePopup = () => {
+    this.setState({ popupMessage: '', showPopup: false });
+  };
+
   handleChange = (e) => {
     const { name, value } = e.target;
     this.setState({ [name]: value });
@@ -66,7 +74,7 @@ class UserRegistration extends Component {
 
   sendOtp = (identifier) => {
     if (!identifier) {
-      alert('Please enter a valid identifier.');
+      this.showPopup('Please enter a valid identifier.');
       return;
     }
 
@@ -78,7 +86,7 @@ class UserRegistration extends Component {
       },
       (error) => {
         console.log('OTP send error:', error);
-        alert('Failed to send OTP.');
+        this.showPopup('Failed to send OTP.');
       }
     );
   };
@@ -86,20 +94,17 @@ class UserRegistration extends Component {
   handleVerifyClick = () => {
     const { mobileNo } = this.state;
     if (!mobileNo || mobileNo.length < 10) {
-      alert('Enter a valid mobile number.');
+      this.showPopup('Enter a valid mobile number.');
       return;
     }
 
     if (typeof window.sendOtp !== 'function') {
-      alert('OTP methods not loaded yet.');
+      this.showPopup('OTP methods not loaded yet.');
       return;
     }
 
-    // Optionally check captcha status (returns true/false)
     const captchaVerified = window.isCaptchaVerified?.();
     console.log('Captcha is verified or not:', captchaVerified);
-
-    // Optional: Get widget data
     const widgetData = window.getWidgetData?.();
     console.log('Widget Data:', widgetData);
 
@@ -110,12 +115,12 @@ class UserRegistration extends Component {
     const { otp, reqId } = this.state;
 
     if (!otp) {
-      alert('Enter OTP first.');
+      this.showPopup('Enter OTP first.');
       return;
     }
 
     if (typeof window.verifyOtp !== 'function') {
-      alert('OTP verification method not loaded.');
+      this.showPopup('OTP verification method not loaded.');
       return;
     }
 
@@ -124,11 +129,11 @@ class UserRegistration extends Component {
       (data) => {
         console.log('OTP verified:', data, this.state.otp);
         this.setState({ isMobileVerified: true, showOtpModal: false });
-        alert('Mobile number verified!');
+        this.showPopup('Mobile number verified!');
       },
       (error) => {
         console.log('Verification error:', error);
-        alert('Incorrect OTP.');
+        this.showPopup('Incorrect OTP.');
       },
       reqId
     );
@@ -138,7 +143,7 @@ class UserRegistration extends Component {
     const { reqId } = this.state;
 
     if (typeof window.retryOtp !== 'function') {
-      alert('Retry OTP method not loaded.');
+      this.showPopup('Retry OTP method not loaded.');
       return;
     }
 
@@ -146,11 +151,11 @@ class UserRegistration extends Component {
       '11',
       (data) => {
         console.log('Resent OTP:', data);
-        alert('OTP resent successfully.');
+        this.showPopup('OTP resent successfully.');
       },
       (error) => {
         console.log('Retry error:', error);
-        alert('Failed to resend OTP.');
+        this.showPopup('Failed to resend OTP.');
       },
       reqId
     );
@@ -160,7 +165,7 @@ class UserRegistration extends Component {
     e.preventDefault();
     if (this.validateForm()) {
       console.log('Form submitted:', this.state);
-      alert('Registration successful!');
+      this.showPopup('Registration successful!');
     }
   };
 
@@ -181,13 +186,12 @@ class UserRegistration extends Component {
   };
 
   render() {
-    const { errors, isMobileVerified, showOtpModal, otp, instrument } = this.state;
+    const { errors, isMobileVerified, showOtpModal, otp, instrument, showPopup, popupMessage } = this.state;
+
     return (
       <div className="form-container">
         <form className="registration-form" onSubmit={this.handleSubmit}>
-
           <img src={RegistrationImage} alt="Registration Banner" className="registration-image" />
-
           <h2>Registration Form</h2>
 
           <div className="row">
@@ -201,21 +205,19 @@ class UserRegistration extends Component {
           </div>
 
           <div className="row">
-
             <div className="form-group">
-
-              <input type="text" name="lastName"  placeholder='Last Name' onChange={this.handleChange} />
+              <input type="text" name="lastName" placeholder='Last Name' onChange={this.handleChange} />
               <div className="error">{errors.lastName}</div>
             </div>
             <div className="form-group">
-              <input type="number" name="age" onChange={this.handleChange} placeholder='Age'/>
+              <input type="number" name="age" onChange={this.handleChange} placeholder='Age' />
               <div className="error">{errors.age}</div>
             </div>
           </div>
 
           <div className="row">
             <div className="form-group" style={{ flex: 2 }}>
-              <select name="gender" placeholder='Gender'  onChange={this.handleChange}>
+              <select name="gender" placeholder='Gender' onChange={this.handleChange}>
                 <option value="">Select</option>
                 <option value="Male">Male</option>
                 <option value="Female">Female</option>
@@ -227,8 +229,7 @@ class UserRegistration extends Component {
                 value={instrument}
                 options={['Dhol', 'Tasha', 'Dhwaj']}
                 onChange={this.handleMultiSelectChange}
-                // className="p-inputtext p-component" // Apply custom PrimeReact styling
-                placeholder='Select Instruments'
+                placeholder='select Instrument'
               />
               <div className="error">{errors.instrument}</div>
             </div>
@@ -260,7 +261,6 @@ class UserRegistration extends Component {
         </form>
 
         {showOtpModal && (
-
           <OtpModal
             otp={otp}
             onChange={(e) => this.setState({ otp: e.target.value })}
@@ -268,21 +268,15 @@ class UserRegistration extends Component {
             onCancel={() => this.setState({ showOtpModal: false })}
             onRetry={this.handleRetryOtp}
           />
-          // <div className="otp-modal">
-          //   <div className="otp-box">
-          //     <h3>Enter OTP</h3>
-          //     <input
-          //       type="text"
-          //       value={otp}
-          //       onChange={(e) => this.setState({ otp: e.target.value })}
-          //     />
-          //     <div className="modal-actions-row">
-          //       <button onClick={this.handleOtpSubmit}>Submit</button>
-          //       <button onClick={() => this.setState({ showOtpModal: false })}>Cancel</button>
-          //       <button onClick={this.handleRetryOtp}>Resend OTP</button>
-          //     </div>
-          //   </div>
-          // </div>
+        )}
+
+        {showPopup && (
+          <div className="popup-overlay">
+            <div className="popup-box">
+              <p>{popupMessage}</p>
+              <button onClick={this.closePopup}>OK</button>
+            </div>
+          </div>
         )}
       </div>
     );
