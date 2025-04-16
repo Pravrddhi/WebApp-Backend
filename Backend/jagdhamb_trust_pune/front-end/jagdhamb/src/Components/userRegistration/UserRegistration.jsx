@@ -192,49 +192,43 @@ class UserRegistration extends Component {
 
           <div className="row">
             <div className="form-group">
-              <label>First Name*</label>
-              <input type="text" name="firstName" onChange={this.handleChange} />
+              <input type="text" name="firstName" placeholder='First Name' onChange={this.handleChange} />
               <div className="error">{errors.firstName}</div>
             </div>
             <div className="form-group">
-              <label>Middle Name</label>
-              <input type="text" name="middleName" onChange={this.handleChange} />
+              <input type="text" name="middleName" onChange={this.handleChange} placeholder='Middle Name' />
             </div>
           </div>
 
           <div className="row">
 
             <div className="form-group">
-              <label>Last Name*</label>
-              <input type="text" name="lastName" onChange={this.handleChange} />
+
+              <input type="text" name="lastName"  placeholder='Last Name' onChange={this.handleChange} />
               <div className="error">{errors.lastName}</div>
             </div>
             <div className="form-group">
-              <label>Age*</label>
-              <input type="number" name="age" onChange={this.handleChange} />
+              <input type="number" name="age" onChange={this.handleChange} placeholder='Age'/>
               <div className="error">{errors.age}</div>
             </div>
           </div>
 
           <div className="row">
             <div className="form-group" style={{ flex: 2 }}>
-              <label>Gender*</label>
-              <select name="gender" onChange={this.handleChange}>
+              <select name="gender" placeholder='Gender'  onChange={this.handleChange}>
                 <option value="">Select</option>
                 <option value="Male">Male</option>
                 <option value="Female">Female</option>
               </select>
               <div className="error">{errors.gender}</div>
             </div>
-            <div className="form-group w-full style={{ width: '20%' }}">
-              <label>Select Instruments*</label>
+            <div className="form-group" style={{ flex: 2 }}>
               <MultiSelect
                 value={instrument}
                 options={['Dhol', 'Tasha', 'Dhwaj']}
                 onChange={this.handleMultiSelectChange}
-                placeholder="Select instruments"
-                display="chip"  // Displays selected items as chips
-                className="p-inputtext p-component" // Apply custom PrimeReact styling
+                // className="p-inputtext p-component" // Apply custom PrimeReact styling
+                placeholder='Select Instruments'
               />
               <div className="error">{errors.instrument}</div>
             </div>
@@ -242,8 +236,7 @@ class UserRegistration extends Component {
 
           <div className="row">
             <div className="form-group" style={{ flex: 2 }}>
-              <label>Mobile No*</label>
-              <input type="text" name="mobileNo" onChange={this.handleChange} />
+              <input type="text" name="mobileNo" placeholder='Mobile No' onChange={this.handleChange} />
               <div className="error">{errors.mobileNo}</div>
             </div>
             <div className="form-group" style={{ alignSelf: 'end' }}>
@@ -259,8 +252,7 @@ class UserRegistration extends Component {
           </div>
 
           <div className="form-group">
-            <label>Address*</label>
-            <textarea name="address" onChange={this.handleChange}></textarea>
+            <textarea name="address" onChange={this.handleChange} placeholder='Address'></textarea>
             <div className="error">{errors.address}</div>
           </div>
 

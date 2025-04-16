@@ -11,7 +11,7 @@ class OtpModal extends React.Component {
           <div className="otp-box">
             <h3>Enter OTP</h3>
             <input
-              type="text"
+              type="number"
               value={otp}
               onChange={onChange}
             />
