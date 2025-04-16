@@ -1,5 +1,10 @@
 import React, { Component } from 'react';
+import { MultiSelect } from 'primereact/multiselect';
+import 'primereact/resources/themes/lara-light-indigo/theme.css'; // Import theme
+import 'primereact/resources/primereact.min.css'; // Import core styles
+import 'primeicons/primeicons.css'; // Import icons
 import './UserRegistration.css';
+import RegistrationImage from '../Assets/g.jfif';
 import OtpModal from './OtpModal';
 
 class UserRegistration extends Component {
@@ -56,8 +61,7 @@ class UserRegistration extends Component {
   };
 
   handleMultiSelectChange = (e) => {
-    const options = Array.from(e.target.selectedOptions, (option) => option.value);
-    this.setState({ instrument: options });
+    this.setState({ instrument: e.value });
   };
 
   sendOtp = (identifier) => {
@@ -177,10 +181,13 @@ class UserRegistration extends Component {
   };
 
   render() {
-    const { errors, isMobileVerified, showOtpModal, otp } = this.state;
+    const { errors, isMobileVerified, showOtpModal, otp, instrument } = this.state;
     return (
       <div className="form-container">
         <form className="registration-form" onSubmit={this.handleSubmit}>
+
+          <img src={RegistrationImage} alt="Registration Banner" className="registration-image" />
+
           <h2>Registration Form</h2>
 
           <div className="row">
@@ -193,20 +200,24 @@ class UserRegistration extends Component {
               <label>Middle Name</label>
               <input type="text" name="middleName" onChange={this.handleChange} />
             </div>
+          </div>
+
+          <div className="row">
+
             <div className="form-group">
               <label>Last Name*</label>
               <input type="text" name="lastName" onChange={this.handleChange} />
               <div className="error">{errors.lastName}</div>
             </div>
-          </div>
-
-          <div className="row">
             <div className="form-group">
               <label>Age*</label>
               <input type="number" name="age" onChange={this.handleChange} />
               <div className="error">{errors.age}</div>
             </div>
-            <div className="form-group">
+          </div>
+
+          <div className="row">
+            <div className="form-group" style={{ flex: 2 }}>
               <label>Gender*</label>
               <select name="gender" onChange={this.handleChange}>
                 <option value="">Select</option>
@@ -214,6 +225,18 @@ class UserRegistration extends Component {
                 <option value="Female">Female</option>
               </select>
               <div className="error">{errors.gender}</div>
+            </div>
+            <div className="form-group w-full style={{ width: '20%' }}">
+              <label>Select Instruments*</label>
+              <MultiSelect
+                value={instrument}
+                options={['Dhol', 'Tasha', 'Dhwaj']}
+                onChange={this.handleMultiSelectChange}
+                placeholder="Select instruments"
+                display="chip"  // Displays selected items as chips
+                className="p-inputtext p-component" // Apply custom PrimeReact styling
+              />
+              <div className="error">{errors.instrument}</div>
             </div>
           </div>
 
@@ -233,16 +256,6 @@ class UserRegistration extends Component {
                 {isMobileVerified ? 'Verified' : 'Verify'}
               </button>
             </div>
-          </div>
-
-          <div className="form-group">
-            <label>Instruments*</label>
-            <select name="instrument" multiple onChange={this.handleMultiSelectChange}>
-              <option value="Dhol">Dhol</option>
-              <option value="Tasha">Tasha</option>
-              <option value="Dhwaj">Dhwaj</option>
-            </select>
-            <div className="error">{errors.instrument}</div>
           </div>
 
           <div className="form-group">
