@@ -6,9 +6,16 @@ from django.utils.translation import gettext_lazy as _
 from django.views.generic import DetailView
 from django.views.generic import RedirectView
 from django.views.generic import UpdateView
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
 
-from jagdhamb_trust_pune.users.models import User
-
+from .permissions import IsUserAuthenticated
+from .models import UserRegister
+from .serializers import UserRegisterSerializer
+from .models import User
+from rest_framework import generics
+from rest_framework.permissions import AllowAny
 
 class UserDetailView(LoginRequiredMixin, DetailView):
     model = User
@@ -44,3 +51,31 @@ class UserRedirectView(LoginRequiredMixin, RedirectView):
 
 
 user_redirect_view = UserRedirectView.as_view()
+
+
+class RegisterUserView(APIView):
+    def post(self, request):
+        serializer = UserRegisterSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({"data":serializer.data, "type":"success"}, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class ExistingUserView(generics.CreateAPIView):
+    permission_classes = [AllowAny]
+    authentication_classes = []
+
+    def post(self, request, *args, **kwargs):
+        request_data = request.data
+        if not request_data:
+            return Response(data={"status": False}, status=status.HTTP_400_BAD_REQUEST)
+        request_mobile_number = request_data.get("mobile_number", None)
+        users = None
+        if request_mobile_number:
+            users = UserRegister.objects.filter(mobile_number=request_mobile_number)
+        existing_user = False
+        if users.exists():
+            existing_user = True
+        return Response(
+            data=dict(existing_user=existing_user), status=status.HTTP_200_OK
+        )

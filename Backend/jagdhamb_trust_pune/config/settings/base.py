@@ -283,3 +283,6 @@ SOCIALACCOUNT_FORMS = {"signup": "jagdhamb_trust_pune.users.forms.UserSocialSign
 
 # Your stuff...
 # ------------------------------------------------------------------------------
+JWT_SECRET = "This is where you put your JWT secret"
+JWT_SECRET_REFRESH = "This is where you put your refresh JWT secret"
+JWT_ALGORITHM = "HS256"
