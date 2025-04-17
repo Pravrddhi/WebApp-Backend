@@ -1,0 +1,263 @@
+/* Page Background */
+body,
+html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    background-color: maroon;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+/* Centered form container on maroon background */
+.form-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 60px 20px;
+    background-color: maroon;
+}
+
+/* White registration box */
+.registration-form {
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.2);
+    padding: 40px;
+    max-width: 700px;
+    width: 100%;
+}
+
+.registration-form h2 {
+    text-align: center;
+    margin-bottom: 30px;
+    color: #333;
+}
+
+.row {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+label {
+    font-weight: 600;
+    margin-bottom: 5px;
+    color: #444;
+}
+
+input,
+select,
+textarea {
+    padding: 10px;
+    /* border: 1px solid #ccc; */
+    border-radius: 6px;
+    font-size: 14px;
+    background-color: #ece5e5;
+}
+
+textarea {
+    resize: vertical;
+}
+
+.error {
+    color: red;
+    font-size: 12px;
+    margin-top: 4px;
+}
+
+button {
+    width: auto;
+    padding: 10px 20px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.verify-btn {
+    background-color: #800000;
+    color: white;
+    margin-top: 0px;
+    /* or adjust to something like -5px if needed */
+    transform: translateY(-6px);
+}
+
+.verify-btn:disabled {
+    background-color: #10b981;
+    cursor: not-allowed;
+}
+
+button[type="submit"] {
+    background-color: #800000;
+    color: white;
+    width: 100%;
+    margin-top: 20px;
+}
+
+/* OTP Modal Styles */
+.otp-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+}
+
+.otp-popup {
+    background: white;
+    padding: 30px 40px;
+    border-radius: 10px;
+    text-align: center;
+    width: 100%;
+    max-width: 400px;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+.otp-popup h2 {
+    margin-bottom: 10px;
+    color: #222;
+}
+
+.otp-input {
+    width: 100%;
+    padding: 12px;
+    margin: 20px 0;
+    font-size: 18px;
+    text-align: center;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+}
+
+.otp-buttons {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.btn {
+    padding: 10px 16px;
+    border: none;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.btn.primary {
+    background: #800000;
+    color: white;
+}
+
+.btn.secondary {
+    background: #800000;
+    color: #111;
+}
+
+.btn.link {
+    background: transparent;
+    color: #800000;
+    text-decoration: underline;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* Custom styles for the MultiSelect component */
+.p-multiselect {
+    width: 100%;
+    height: 41px;
+}
+
+.p-multiselect-chip {
+    margin: 2px;
+    background-color: #fdfdfd;
+}
+
+.p-multiselect-panel {
+    z-index: 10;
+}
+
+.p- {
+    font-size: 1rem;
+    /* keeps icon size consistent */
+}
+
+.registration-image {
+    display: block;
+    margin: -59px auto;
+    max-width: 100%;
+    height: auto;
+    padding-bottom: 20px;
+  }
+
+  .popup-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .popup-box {
+    background: white;
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+    animation: fadeIn 0.3s ease-in-out;
+  }
+  
+  .large-popup {
+    width: 400px;
+    padding: 30px;
+    font-size: 16px;
+  }
+  
+  .popup-box button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    font-weight: bold;
+    background-color: #800000;
+    color: white;
+    border: none;
+    cursor: pointer;  
+    border-radius: 6px;
+  }
+  
+  .popup-box button:hover {
+    background-color: #45a049;
+  }
+  
+  @keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.9); }
+    to { opacity: 1; transform: scale(1); }
+  }
+  
+  

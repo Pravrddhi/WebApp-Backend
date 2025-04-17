@@ -1,0 +1,38 @@
+.otp-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 100vw;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+  
+  .otp-modal {
+    background: white;
+    border-radius: 8px;
+    padding: 2rem;
+    min-width: 320px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  }
+  
+  .otp-box {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .otp-box input {
+    margin-top: 1rem;
+    padding: 0.5rem;
+    font-size: 1rem;
+  }
+  
+  .modal-actions-row {
+    margin-top: 1.5rem;
+    display: flex;
+    justify-content: space-between;
+  }
+  
