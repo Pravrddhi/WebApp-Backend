@@ -26,6 +26,7 @@ class UserRegistration extends Component {
       reqId: '',
       popupMessage: '',
       showPopup: false,
+      showSuccessPopup: false,
     };
   }
 
@@ -34,12 +35,8 @@ class UserRegistration extends Component {
       widgetId: '35646b737343323738353130',
       tokenAuth: '446603TCnuMImrwXIQ67f96874P1',
       exposeMethods: true,
-      success: (data) => {
-        console.log('Global config success:', data);
-      },
-      failure: (error) => {
-        console.log('Global config failure:', error);
-      },
+      success: (data) => console.log('Global config success:', data),
+      failure: (error) => console.log('Global config failure:', error),
     };
 
     if (window.initSendOTP) {
@@ -48,9 +45,7 @@ class UserRegistration extends Component {
       const script = document.createElement('script');
       script.src = 'https://verify.msg91.com/otp-provider.js';
       script.type = 'text/javascript';
-      script.onload = () => {
-        window.initSendOTP(window.configuration);
-      };
+      script.onload = () => window.initSendOTP(window.configuration);
       document.body.appendChild(script);
     }
   }
@@ -72,12 +67,24 @@ class UserRegistration extends Component {
     this.setState({ instrument: e.value });
   };
 
-  sendOtp = (identifier) => {
-    if (!identifier) {
-      this.showPopup('Please enter a valid identifier.');
+  checkIfUserExists = async (mobileNo) => {
+    try {
+      const response = await fetch('http://backend_jagdhamb_trust_pune_local/api/users/existing_user/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ mobile_number: mobileNo }),
+      }); 
+      const data = await response.json();
+      console.log("--------------------", data)
+      return data.existing_user;
+    } catch (error) {
+      console.error('Error checking user:', error);
+      this.showPopup('Error checking mobile number.');
       return;
     }
+  };
 
+  sendOtp = (identifier) => {
     window.sendOtp(
       identifier,
       (data) => {
@@ -91,7 +98,7 @@ class UserRegistration extends Component {
     );
   };
 
-  handleVerifyClick = () => {
+  handleVerifyClick = async () => {
     const { mobileNo } = this.state;
     if (!mobileNo || mobileNo.length < 10) {
       this.showPopup('Enter a valid mobile number.');
@@ -103,12 +110,14 @@ class UserRegistration extends Component {
       return;
     }
 
-    const captchaVerified = window.isCaptchaVerified?.();
-    console.log('Captcha is verified or not:', captchaVerified);
-    const widgetData = window.getWidgetData?.();
-    console.log('Widget Data:', widgetData);
+    const exists = await this.checkIfUserExists(mobileNo);
+    if (exists) {
+      this.showPopup('Mobile number is already registered.');
+      return;
+    }
 
-    this.sendOtp(`91${mobileNo}`);
+    const identifier = `91${mobileNo}`;
+    this.sendOtp(identifier);
   };
 
   handleOtpSubmit = () => {
@@ -163,9 +172,23 @@ class UserRegistration extends Component {
 
   handleSubmit = (e) => {
     e.preventDefault();
+
+    if (!this.state.isMobileVerified) {
+      this.showPopup('Please verify your mobile number first.');
+      return
+    }
+    let successLink = '';
+
+    if (this.state.gender === 'Female') {
+      successLink = 'https://example.com/female-success'; // replace with actual link
+    } else if (this.state.gender === 'Male') {
+      successLink = 'https://example.com/male-success'; // replace with actual link
+    }
+
+
     if (this.validateForm()) {
       console.log('Form submitted:', this.state);
-      this.showPopup('Registration successful!');
+      this.setState({ showSuccessPopup: true , successLink});
     }
   };
 
@@ -186,7 +209,10 @@ class UserRegistration extends Component {
   };
 
   render() {
-    const { errors, isMobileVerified, showOtpModal, otp, instrument, showPopup, popupMessage } = this.state;
+    const {
+      errors, isMobileVerified, showOtpModal, otp, instrument,
+      showPopup, popupMessage, showSuccessPopup
+    } = this.state;
 
     return (
       <div className="form-container">
@@ -196,29 +222,29 @@ class UserRegistration extends Component {
 
           <div className="row">
             <div className="form-group">
-              <input type="text" name="firstName" placeholder='First Name' onChange={this.handleChange} />
+              <input type="text" name="firstName" placeholder="First Name" onChange={this.handleChange} />
               <div className="error">{errors.firstName}</div>
             </div>
             <div className="form-group">
-              <input type="text" name="middleName" onChange={this.handleChange} placeholder='Middle Name' />
+              <input type="text" name="middleName" placeholder="Middle Name" onChange={this.handleChange} />
             </div>
           </div>
 
           <div className="row">
             <div className="form-group">
-              <input type="text" name="lastName" placeholder='Last Name' onChange={this.handleChange} />
+              <input type="text" name="lastName" placeholder="Last Name" onChange={this.handleChange} />
               <div className="error">{errors.lastName}</div>
             </div>
             <div className="form-group">
-              <input type="number" name="age" onChange={this.handleChange} placeholder='Age' />
+              <input type="number" name="age" placeholder="Age" onChange={this.handleChange} />
               <div className="error">{errors.age}</div>
             </div>
           </div>
 
           <div className="row">
             <div className="form-group" style={{ flex: 2 }}>
-              <select name="gender" placeholder='Gender' onChange={this.handleChange}>
-                <option value="">Select</option>
+              <select name="gender" onChange={this.handleChange}>
+                <option value="">Select Gender</option>
                 <option value="Male">Male</option>
                 <option value="Female">Female</option>
               </select>
@@ -229,7 +255,7 @@ class UserRegistration extends Component {
                 value={instrument}
                 options={['Dhol', 'Tasha', 'Dhwaj']}
                 onChange={this.handleMultiSelectChange}
-                placeholder='select Instrument'
+                placeholder="Select Instrument"
               />
               <div className="error">{errors.instrument}</div>
             </div>
@@ -237,7 +263,7 @@ class UserRegistration extends Component {
 
           <div className="row">
             <div className="form-group" style={{ flex: 2 }}>
-              <input type="text" name="mobileNo" placeholder='Mobile No' onChange={this.handleChange} />
+              <input type="text" name="mobileNo" placeholder="Mobile No" onChange={this.handleChange} />
               <div className="error">{errors.mobileNo}</div>
             </div>
             <div className="form-group" style={{ alignSelf: 'end' }}>
@@ -253,11 +279,17 @@ class UserRegistration extends Component {
           </div>
 
           <div className="form-group">
-            <textarea name="address" onChange={this.handleChange} placeholder='Address'></textarea>
+            <textarea name="address" onChange={this.handleChange} placeholder="Address"></textarea>
             <div className="error">{errors.address}</div>
           </div>
 
           <button type="submit">Register</button>
+
+          <div>
+            <span style={{color: '#800000'}}>
+            If registration fail Contact:9767704126
+            </span>
+          </div>
         </form>
 
         {showOtpModal && (
@@ -278,6 +310,30 @@ class UserRegistration extends Component {
             </div>
           </div>
         )}
+
+        {showSuccessPopup && (
+          <div className="popup-overlay">
+            <div className="popup-box large">
+              <h3>Registration Successful!</h3>
+              {this.state.gender === 'Female' && (
+                <p style={{ fontWeight: 'bold', marginTop: '10px', color: '#e91e63', fontSize: '15px' }}>
+                  Note: Female vadaks have a separate group. Jagdhamb prioritizes your privacy.
+                </p>
+              )}
+
+              <button
+                className='' 
+                href={this.state.successLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ display: 'inline-block', marginTop: '15px', color: '#007bff' }}
+              >
+                Join WhatsApp Group
+              </button>
+            </div>
+          </div>
+        )}
+
       </div>
     );
   }
