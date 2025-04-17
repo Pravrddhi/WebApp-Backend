@@ -1,5 +1,6 @@
 import React from 'react';
 import './OtpModal.css';
+import isResendDisabled from './UserRegistration'
 
 class OtpModal extends React.Component {
   render() {
@@ -18,7 +19,7 @@ class OtpModal extends React.Component {
             <div className="modal-actions-row">
               <button onClick={onSubmit}>Submit</button>
               <button onClick={onCancel}>Cancel</button>
-              <button onClick={onRetry}>Resend OTP</button>
+              <button onClick={onRetry} disabled={isResendDisabled}>Resend OTP</button>
             </div>
           </div>
         </div>
