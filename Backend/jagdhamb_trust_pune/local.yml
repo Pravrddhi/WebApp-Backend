@@ -3,12 +3,6 @@ volumes:
   data_backups: {}
   pgadmin_data: {}
   front_end_data: {}
-
-networks:
-  backend_network:
-    driver: bridge
-  frontend_network:
-    driver: bridge
   
 
 services:
