@@ -13,7 +13,6 @@ WORKDIR ${APP_HOME}/front-end/jagdhamb
 
 RUN rm -rf node_modules
 RUN npm install --force
-RUN
 
 # Expose the port your app runs on
 EXPOSE 3000
