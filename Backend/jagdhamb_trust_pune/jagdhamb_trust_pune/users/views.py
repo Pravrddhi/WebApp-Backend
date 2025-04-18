@@ -64,7 +64,7 @@ class RegisterUserView(APIView):
 class ExistingUserView(generics.CreateAPIView):
     permission_classes = [AllowAny]
     authentication_classes = []
-
+    serializer_class = UserRegisterSerializer
     def post(self, request, *args, **kwargs):
         request_data = request.data
         if not request_data:

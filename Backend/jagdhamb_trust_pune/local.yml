@@ -3,6 +3,12 @@ volumes:
   data_backups: {}
   pgadmin_data: {}
   front_end_data: {}
+
+networks:
+  backend_network:
+    driver: bridge
+  frontend_network:
+    driver: bridge
   
 
 services:
@@ -48,9 +54,9 @@ services:
     restart: always
     depends_on:
       - backend
-    # env_file:
-    #   - ./.envs/.local/.django
-    #   - ./.envs/.local/.postgres
+    env_file:
+      - ./.envs/.local/.django
+      - ./.envs/.local/.postgres
     ports:
       - '3000:3000'
     command: /start
