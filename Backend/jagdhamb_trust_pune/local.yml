@@ -30,6 +30,7 @@ services:
       dockerfile: ./compose/production/postgres/Dockerfile
     image: production_postgres
     container_name: jagdhamb_trust_pune_local_postgres
+    restart: always
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - data_backups:/backups
@@ -37,20 +38,3 @@ services:
       - ./.envs/.local/.postgres
     ports:
       - '5432:5432'
-
-
-  front-end:
-    build:
-      context: .
-      dockerfile: ./compose/local/react/Dockerfile
-    image: frontend_jagdhamb_trust_pune_local
-    container_name: frontend_jagdhamb_trust_pune_local
-    restart: always
-    depends_on:
-      - backend
-    env_file:
-      - ./.envs/.local/.django
-      - ./.envs/.local/.postgres
-    ports:
-      - '3000:3000'
-    command: /start
