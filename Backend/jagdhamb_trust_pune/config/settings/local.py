@@ -14,8 +14,14 @@ SECRET_KEY = env(
     default="2BQW43C94WxPFIJzbhp44cd17UCqsTF56s6EhR5ZReAmiC4MmfYev8679JkhnqVM",
 )
 # https://docs.djangoproject.com/en/dev/ref/settings/#allowed-hosts
-ALLOWED_HOSTS = ["localhost", "0.0.0.0", "127.0.0.1"]  # noqa: S104
-
+ALLOWED_HOSTS = ["localhost","127.0.0.1", "13.48.106.3","https://jagdhambtrustpune.netlify.app"]  # noqa: S104
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",  # if frontend is running locally
+    "https://jagdhambtrustpune.netlify.app",
+    "https://13.48.106.3"  # if frontend is dockerized
+]
+# noqa: S104
+CORS_ALLOW_CREDENTIALS = True
 # CACHES
 # ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#caches
