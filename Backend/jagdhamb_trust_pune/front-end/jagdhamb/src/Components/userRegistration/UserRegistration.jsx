@@ -4,7 +4,7 @@ import 'primereact/resources/themes/lara-light-indigo/theme.css';
 import 'primereact/resources/primereact.min.css';
 import 'primeicons/primeicons.css';
 import './UserRegistration.css';
-import RegistrationImage from '../Assets/g.jfif';
+import RegistrationImage from '../Assets/jagdhamb.jpg';
 import OtpModal from './OtpModal';
 
 class UserRegistration extends Component {
@@ -339,19 +339,20 @@ render() {
             name="emergencyContact"
             placeholder="Emergency Contact No"
             onChange={this.handleChange}
+            maxLength={10}
           />
           <div className="error">{errors.emergencyContact}</div>
         </div>
-        <div className="form-group">
+        <div className="form-group" style={{ marginTop: '10px' }}>
           <textarea name="address" onChange={this.handleChange} placeholder="Address"></textarea>
           <div className="error">{errors.address}</div>
         </div>
 
         <button type="submit">Register</button>
 
-        <div>
+        <div style={{ marginTop: '20px', textAlign: 'center' }}> 
           <span style={{ color: '#800000' }}>
-            If registration fail Contact:9767704126
+            If registration fail Contact: 9767704126
           </span>
         </div>
       </form>
