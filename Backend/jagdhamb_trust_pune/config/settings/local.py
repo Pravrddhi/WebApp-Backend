@@ -20,7 +20,7 @@ CORS_ALLOWED_ORIGINS = [
     "http://frontend:3000",  # if frontend is dockerized
 ]
 # noqa: S104
-
+CORS_ALLOW_CREDENTIALS = True
 # CACHES
 # ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#caches
