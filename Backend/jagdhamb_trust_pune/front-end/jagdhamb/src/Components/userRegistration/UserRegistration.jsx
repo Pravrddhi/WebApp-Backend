@@ -74,7 +74,7 @@ handleMultiSelectChange = (e) => {
 
 checkIfUserExists = async (mobileNo) => {
   try {
-    const response = await fetch('http://backend:8000/api/users/existing_user/', {
+    const response = await fetch(`http://backend8000/api/users/existing_user/`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ mobile_number: mobileNo }),
@@ -203,7 +203,7 @@ handleSubmit = async (e) => {
     } = this.state;
 
     try {
-      const response = await fetch('http://backend:8000/api/users/register/', {
+      const response = await fetch(`http://backend8000/api/users/register/`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

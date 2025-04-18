@@ -1,2 +1,3 @@
 msg91_auth_key: 446603Akm17aGXDyZT67f96c5aP1
 token: 446603TCnuMImrwXIQ67f96874P1
+REACT_APP_API_BASE=http://backend:8000
