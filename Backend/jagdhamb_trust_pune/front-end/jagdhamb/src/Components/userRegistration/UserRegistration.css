@@ -207,9 +207,9 @@ button[type="submit"] {
 
 .registration-image {
     display: block;
-    margin: -59px auto;
+    margin: -20px auto;
     max-width: 100%;
-    height: auto;
+    height: 250px;
     padding-bottom: 20px;
   }
 
