@@ -58,7 +58,7 @@ class RegisterUserView(APIView):
         serializer = UserRegisterSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response({"data":serializer.data, "type":"success"}, status=status.HTTP_201_CREATED)
+            return Response({"type":"success"}, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class ExistingUserView(generics.CreateAPIView):
@@ -71,11 +71,18 @@ class ExistingUserView(generics.CreateAPIView):
             return Response(data={"status": False}, status=status.HTTP_400_BAD_REQUEST)
         request_mobile_number = request_data.get("mobile_number", None)
         users = None
-        if request_mobile_number:
-            users = UserRegister.objects.filter(mobile_number=request_mobile_number)
-        existing_user = False
-        if users.exists():
-            existing_user = True
-        return Response(
-            data=dict(existing_user=existing_user), status=status.HTTP_200_OK
-        )
+        try:
+            if request_mobile_number:
+                users = UserRegister.objects.filter(mobile_number=request_mobile_number)
+            if users.exists():
+                return Response(
+                    data={"existing_user":True}, status=status.HTTP_200_OK
+                )
+            else:
+                return Response(
+                    data={"existing_user":False}, status=status.HTTP_200_OK
+                )
+        except Exception as e:
+            return Response(
+                data={"status":e}, status=status.HTTP_400_BAD_REQUEST
+            )
