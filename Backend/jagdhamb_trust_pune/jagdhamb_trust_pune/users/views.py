@@ -62,7 +62,7 @@ class RegisterUserView(APIView):
             serializer.save()
             return Response({"data":serializer.data, "type":"success"}, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-@csrf_exempt
+
 class ExistingUserView(generics.CreateAPIView):
     permission_classes = [AllowAny]
     authentication_classes = []
