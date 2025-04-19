@@ -58,6 +58,8 @@ class UserRegisterAdmin(admin.ModelAdmin):
                 "date_of_birth",
                 "age",
                 "mobile_number",
+                "experience_years",
+                "experience_pathak_name"
                 "emergency_contact",
                 "blood_group",
                 "instrument",
