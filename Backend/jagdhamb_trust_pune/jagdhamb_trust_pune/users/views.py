@@ -56,12 +56,14 @@ user_redirect_view = UserRedirectView.as_view()
 
 
 class RegisterUserView(APIView):
+    permission_classes = [AllowAny]
+    authentication_classes = []
     def post(self, request):
         serializer = UserRegisterSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response({"data":serializer.data, "type":"success"}, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"success":True}, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors,{"success":False}, status=status.HTTP_400_BAD_REQUEST)
 
 class ExistingUserView(generics.CreateAPIView):
     permission_classes = [AllowAny]

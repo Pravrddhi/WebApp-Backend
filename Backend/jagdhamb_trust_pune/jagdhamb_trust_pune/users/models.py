@@ -6,6 +6,7 @@ from django.db.models import CharField
 from django.db.models import EmailField
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
+from django.contrib.postgres.fields import ArrayField
 
 from .managers import UserManager
 from django.db import models
@@ -63,9 +64,10 @@ class UserRegister(models.Model):
     emergency_contact = models.CharField(max_length=15, null=False)
     blood_group = models.CharField(max_length=5, choices=BloodGroupChoice.choices, null=True, blank=True)
     gender = models.CharField(max_length=10, choices=GenderChoice.choices, null=False)
-    instrument = models.CharField(max_length=100, null=False)
+    instrument = ArrayField(base_field=CharField())
     address = models.TextField(null=False)
-    
+    experience_years = models.FloatField(null=True, blank=True, max_length=2)
+    experience_pathak_name = models.CharField(max_length=50, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     updated_by = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
