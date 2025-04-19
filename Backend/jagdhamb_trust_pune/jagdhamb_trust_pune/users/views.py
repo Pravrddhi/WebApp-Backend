@@ -9,6 +9,8 @@ from django.views.generic import UpdateView
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from django.views.decorators.csrf import csrf_exempt
+
 
 from .permissions import IsUserAuthenticated
 from .models import UserRegister
@@ -60,7 +62,7 @@ class RegisterUserView(APIView):
             serializer.save()
             return Response({"data":serializer.data, "type":"success"}, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
+@csrf_exempt
 class ExistingUserView(generics.CreateAPIView):
     permission_classes = [AllowAny]
     authentication_classes = []

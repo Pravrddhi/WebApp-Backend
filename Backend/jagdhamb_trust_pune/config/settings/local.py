@@ -17,7 +17,7 @@ SECRET_KEY = env(
 ALLOWED_HOSTS = ["localhost","127.0.0.1", "13.49.18.133","jagdhambtrustpune.netlify.app"]  # noqa: S104
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",  # if frontend is running locally
-    "https://jagdhambtrustpune.netlify.app",
+    "http://jagdhambtrustpune.netlify.app",
     "http://13.49.18.133"  # if frontend is dockerized
 ]
 # noqa: S104
