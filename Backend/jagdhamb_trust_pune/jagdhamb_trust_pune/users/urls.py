@@ -1,5 +1,4 @@
 from django.urls import path
-import views
 from .views import user_detail_view
 from .views import user_redirect_view
 from .views import user_update_view, ExistingUserView, RegisterUserView
