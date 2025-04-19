@@ -34,6 +34,11 @@ EMAIL_BACKEND = env(
     "DJANGO_EMAIL_BACKEND", default="django.core.mail.backends.console.EmailBackend",
 )
 
+ALLOWED_HOSTS = ["localhost","127.0.0.1","13.49.18.133" ,"jagdhambtrustpune.netlify.app"]  # noqa: S104
+CORS_ALLOWED_ORIGINS = [  # if frontend is running locally
+    "https://jagdhambtrustpune.netlify.app",  # if frontend is dockerized
+]
+
 # django-debug-toolbar
 # ------------------------------------------------------------------------------
 # https://django-debug-toolbar.readthedocs.io/en/latest/installation.html#prerequisites
