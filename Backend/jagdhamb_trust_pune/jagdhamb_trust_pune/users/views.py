@@ -1,21 +1,9 @@
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.messages.views import SuccessMessageMixin
-from django.db.models import QuerySet
-from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
-from django.views.generic import DetailView
-from django.views.generic import RedirectView
-from django.views.generic import UpdateView
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from django.views.decorators.csrf import csrf_exempt
-
-
-from .permissions import IsUserAuthenticated
 from .models import UserRegister, UserInstruments, Instrument
 from .serializers import UserRegisterSerializer
-from .models import User
 from rest_framework import generics
 from rest_framework.permissions import AllowAny
 
