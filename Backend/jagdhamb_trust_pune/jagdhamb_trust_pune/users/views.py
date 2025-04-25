@@ -14,13 +14,13 @@ class RegisterUserView(APIView):
     authentication_classes = []
 
     def post(self, request):
-        phone = request.data.get('phone')
-        instruments = request.data.get('instruments', [])
+        phone = request.data.get('mobile_number')
+        instruments = request.data.get('instrument', [])
 
         serializer = UserRegisterSerializer(data=request.data)
         if serializer.is_valid():
             user = serializer.save()
-            UserRegister.objects.create(user=user, phone=phone)
+            UserRegister.objects.create(phone=phone)
         else:
             return Response({"errors": serializer.errors, "status": False}, status=status.HTTP_400_BAD_REQUEST)
 
