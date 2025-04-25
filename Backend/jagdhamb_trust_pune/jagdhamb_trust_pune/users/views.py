@@ -19,10 +19,10 @@ class RegisterUserView(APIView):
 
         serializer = UserRegisterSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save()
+           user= serializer.save()
         else:
             return Response({"errors": serializer.errors, "status": False}, status=status.HTTP_400_BAD_REQUEST)
-        user = UserRegister.objects.get(mobile_number=phone)
+        user = UserRegister.objects.get(id=user.id)
         print(user, "************************************************")
         if isinstance(instruments, list):
             UserInstruments.objects.filter(user=user).delete()
