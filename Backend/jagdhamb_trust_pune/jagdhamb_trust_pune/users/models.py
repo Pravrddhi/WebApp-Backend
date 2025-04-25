@@ -72,8 +72,8 @@ class UserRegister(models.Model):
     updated_by = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
     soft_delete = models.IntegerField(default=0)  # 0= not deleted,1 = deleted
 
-    def __str__(self):
-        return f"{self.first_name} {self.last_name}"
+    # def __str__(self):
+    #     return f"{self.first_name} {self.last_name}"
 
 class JWTTokenChoice(models.TextChoices):
     NORMAL = "NORMAL"
