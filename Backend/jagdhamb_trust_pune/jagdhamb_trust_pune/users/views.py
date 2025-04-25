@@ -19,8 +19,8 @@ class RegisterUserView(APIView):
 
         serializer = UserRegisterSerializer(data=request.data)
         if serializer.is_valid():
-            user = serializer.save()
-            UserRegister.objects.create(mobile_number=phone)
+            serializer.save()
+            user = UserRegister.objects.create(mobile_number=phone)
         else:
             return Response({"errors": serializer.errors, "status": False}, status=status.HTTP_400_BAD_REQUEST)
 

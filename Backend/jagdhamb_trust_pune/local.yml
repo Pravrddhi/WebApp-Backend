@@ -37,3 +37,17 @@ services:
       - ./.envs/.local/.postgres
     ports:
       - '5432:5432'
+
+  pgadmin:
+    image: dpage/pgadmin4:latest  # Official pgAdmin image
+    container_name: pgadmin_jagdhamb_trust_pune_local
+    restart: always
+    ports:
+      - '5050:5050'  # Expose pgAdmin on port 5050
+    environment:
+      PGADMIN_DEFAULT_EMAIL: "admin@admin.com"  # pgAdmin login email
+      PGADMIN_DEFAULT_PASSWORD: "admin123"  # pgAdmin login password
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin  # Store pgAdmin data persistently
+    depends_on:
+      - postgres  # Wait for PostgreSQL to start before pgAdmin
