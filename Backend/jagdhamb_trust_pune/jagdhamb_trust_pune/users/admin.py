@@ -62,7 +62,6 @@ class UserRegisterAdmin(admin.ModelAdmin):
                 "experience_pathak_name",
                 "emergency_contact",
                 "blood_group",
-                "instrument",
                 "address"
             )
         }),
@@ -70,8 +69,7 @@ class UserRegisterAdmin(admin.ModelAdmin):
             "fields": (
                 "soft_delete",
                 "created_at",
-                "updated_at",
-                "updated_by",
+                "updated_at"
             )
         }),
     )
