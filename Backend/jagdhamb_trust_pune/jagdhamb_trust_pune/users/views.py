@@ -23,8 +23,9 @@ class RegisterUserView(APIView):
         else:
             return Response({"errors": serializer.errors, "status": False}, status=status.HTTP_400_BAD_REQUEST)
         user = UserRegister.objects.get(mobile_number=phone)
+        print(user, "************************************************")
         if isinstance(instruments, list):
-            UserInstruments.objects.filter(user=user).delete()
+            UserInstruments.objects.filter(user=user).delete()ss
             for name in instruments:
                 instrument, _ = Instrument.objects.get_or_create(instrumenst_name=name)
                 UserInstruments.objects.get_or_create(user=user, instrument=instrument)
