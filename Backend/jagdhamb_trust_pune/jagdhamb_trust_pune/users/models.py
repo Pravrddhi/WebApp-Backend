@@ -69,12 +69,10 @@ class UserRegister(models.Model):
     experience_pathak_name = models.CharField(max_length=50, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    updated_by = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
     soft_delete = models.IntegerField(default=0)  # 0= not deleted,1 = deleted
 
-    # def __str__(self):
-    #     return f"{self.first_name} {self.last_name}"
-
+    def __str__(self):
+        return f"{self.first_name} {self.last_name}"
 class JWTTokenChoice(models.TextChoices):
     NORMAL = "NORMAL"
     REFRESH = "REFRESH"
@@ -114,10 +112,11 @@ class Instrument(models.Model):
         return f"{self.instrument_name}, {self.instrument_id}"
     
 class UserInstruments(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(UserRegister, on_delete=models.CASCADE)
     instrument = models.ForeignKey(Instrument, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return {self.instrument}
+        return f"{self.user}, {self.instrument}"
+    

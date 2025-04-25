@@ -14,23 +14,21 @@ class RegisterUserView(APIView):
     authentication_classes = []
 
     def post(self, request):
-        phone = request.data.get('mobile_number')
-        instruments = request.data.get('instrument', [])
-
+        instruments = request.data.pop('instrument', [])
         serializer = UserRegisterSerializer(data=request.data)
         if serializer.is_valid():
-           user= serializer.save()
+            user = serializer.save()
         else:
             return Response({"errors": serializer.errors, "status": False}, status=status.HTTP_400_BAD_REQUEST)
-        user = UserRegister.objects.get(id=user.id)
-        print(user, "************************************************")
+
+
         if isinstance(instruments, list):
-            UserInstruments.objects.filter(user=user).delete()
             for name in instruments:
-                instrument, _ = Instrument.objects.get_or_create(instrumenst_name=name)
+
+                instrument, _ = Instrument.objects.get_or_create(instrument_name=name)
+
                 UserInstruments.objects.get_or_create(user=user, instrument=instrument)
 
-        # Return response with user data and whether the user was newly created
         return Response({"status": True}, status=status.HTTP_201_CREATED)
 
 class ExistingUserView(generics.CreateAPIView):
