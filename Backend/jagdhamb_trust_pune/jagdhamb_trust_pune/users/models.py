@@ -6,6 +6,7 @@ from django.db.models import CharField
 from django.db.models import EmailField
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
+from django.contrib.postgres.fields import ArrayField
 
 from .managers import UserManager
 from django.db import models
@@ -63,17 +64,15 @@ class UserRegister(models.Model):
     emergency_contact = models.CharField(max_length=15, null=False)
     blood_group = models.CharField(max_length=5, choices=BloodGroupChoice.choices, null=True, blank=True)
     gender = models.CharField(max_length=10, choices=GenderChoice.choices, null=False)
-    instrument = models.CharField(max_length=100, null=False)
     address = models.TextField(null=False)
-    
+    experience_years = models.FloatField(null=True, blank=True, max_length=2)
+    experience_pathak_name = models.CharField(max_length=50, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    updated_by = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
     soft_delete = models.IntegerField(default=0)  # 0= not deleted,1 = deleted
 
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
-
 class JWTTokenChoice(models.TextChoices):
     NORMAL = "NORMAL"
     REFRESH = "REFRESH"
@@ -84,7 +83,7 @@ class JWT(models.Model):
     STATUS_EXPIRED = 0
     STATUS = ((STATUS_ACTIVE, "Active"), (STATUS_EXPIRED, "Expired"))
 
-    user = models.ForeignKey("User", on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     token = models.CharField(max_length=256, null=False)
     expires_at = models.DateTimeField(null=False)
     status = models.SmallIntegerField(choices=STATUS, default=STATUS_ACTIVE)
@@ -101,3 +100,23 @@ class JWT(models.Model):
 class RoleStatusChoice(models.TextChoices):
     USER = "USER"
     ADMIN = "ADMIN"
+
+
+class Instrument(models.Model):
+    instrument_id = models.AutoField(primary_key=True)
+    instrument_name = models.CharField(max_length=50, null=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"{self.instrument_name}, {self.instrument_id}"
+    
+class UserInstruments(models.Model):
+    user = models.ForeignKey(UserRegister, on_delete=models.CASCADE)
+    instrument = models.ForeignKey(Instrument, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"{self.user}, {self.instrument}"
+    
