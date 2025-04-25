@@ -13,57 +13,37 @@ from django.views.decorators.csrf import csrf_exempt
 
 
 from .permissions import IsUserAuthenticated
-from .models import UserRegister
+from .models import UserRegister, UserInstruments, Instrument
 from .serializers import UserRegisterSerializer
 from .models import User
 from rest_framework import generics
 from rest_framework.permissions import AllowAny
 
-class UserDetailView(LoginRequiredMixin, DetailView):
-    model = User
-    slug_field = "id"
-    slug_url_kwarg = "id"
-
-
-user_detail_view = UserDetailView.as_view()
-
-
-class UserUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
-    model = User
-    fields = ["name"]
-    success_message = _("Information successfully updated")
-
-    def get_success_url(self) -> str:
-        assert self.request.user.is_authenticated  # type guard
-        return self.request.user.get_absolute_url()
-
-    def get_object(self, queryset: QuerySet | None=None) -> User:
-        assert self.request.user.is_authenticated  # type guard
-        return self.request.user
-
-
-user_update_view = UserUpdateView.as_view()
-
-
-class UserRedirectView(LoginRequiredMixin, RedirectView):
-    permanent = False
-
-    def get_redirect_url(self) -> str:
-        return reverse("users:detail", kwargs={"pk": self.request.user.pk})
-
-
-user_redirect_view = UserRedirectView.as_view()
 
 
 class RegisterUserView(APIView):
     permission_classes = [AllowAny]
     authentication_classes = []
+
     def post(self, request):
+        phone = request.data.get('phone')
+        instruments = request.data.get('instruments', [])
+
         serializer = UserRegisterSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save()
-            return Response({"status":True}, status=status.HTTP_201_CREATED)
-        return Response({"errors":serializer.errors,"status":False}, status=status.HTTP_400_BAD_REQUEST)
+            user = serializer.save()
+            UserRegister.objects.create(user=user, phone=phone)
+        else:
+            return Response({"errors": serializer.errors, "status": False}, status=status.HTTP_400_BAD_REQUEST)
+
+        if isinstance(instruments, list):
+            UserInstruments.objects.filter(user=user).delete()
+            for name in instruments:
+                instrument, _ = Instrument.objects.get_or_create(instrumenst_name=name)
+                UserInstruments.objects.get_or_create(user=user, instrument=instrument)
+
+        # Return response with user data and whether the user was newly created
+        return Response({"status": True}, status=status.HTTP_201_CREATED)
 
 class ExistingUserView(generics.CreateAPIView):
     permission_classes = [AllowAny]

@@ -271,9 +271,6 @@ LOGGING = {
     },
     "root": {"level": "INFO", "handlers": ["console"]},
 }
-CSRF_TRUSTED_ORIGINS = [
-    'https://13.49.18.133'
-]
 REDIS_URL = env("REDIS_URL", default="redis://redis:6379/0")
 REDIS_SSL = REDIS_URL.startswith("rediss://")
 
